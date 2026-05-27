@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Item</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f7fb;
+        }
+
+        .container {
+            width: 500px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        h2 {
+            color: #0b3d91;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            background: #0b3d91;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .back {
+            background: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Report Item</h2>
+
+    <p id="itemName"></p>
+
+    <label>Reason</label>
+    <select id="reason">
+        <option>Scam</option>
+        <option>Wrong information</option>
+        <option>Inappropriate item</option>
+        <option>Other</option>
+    </select>
+
+    <label>Details</label>
+    <textarea id="details" rows="4"></textarea>
+
+    <button onclick="submitReport()">Submit Report</button>
+    <button class="back" onclick="goBack()">Back</button>
+</div>
+
+<script>
+let itemKey = localStorage.getItem("reportItem");
+
+function loadItem() {
+    document.getElementById("itemName").innerText = "Reporting item: " + itemKey;
+}
+
+function submitReport() {
+    let reason = document.getElementById("reason").value;
+    let details = document.getElementById("details").value;
+
+    let reports = JSON.parse(localStorage.getItem("reports")) || [];
+
+    if (details.trim() === "") {
+        alert("Please enter report details");
+        return;
+    }
+    
+    reports.push({
+        item: itemKey,
+        reason: reason,
+        details: details,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("reports", JSON.stringify(reports));
+
+    alert("Report submitted!");
+    window.location.href = "marketplace.html";
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+loadItem();
+</script>
+
+</body>
+</html>

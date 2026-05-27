@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f7fb;
+        }
+
+        .container {
+            width: 700px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #0b3d91;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .text {
+            font-size: 15px;
+        }
+
+        .time {
+            color: gray;
+            font-size: 13px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            border: none;
+            background: #0b3d91;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #notificationList {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Notifications</h1>
+
+    <div id="notificationList"></div>
+
+    <button onclick="goBack()">Back</button>
+
+</div>
+
+<script>
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+function loadNotifications() {
+
+    let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+    let output = "";
+
+    if (notifications.length === 0) {
+
+        output = `
+        <div style="text-align:center; color:gray; margin-top:40px;">
+            🔔<br><br>
+            No notifications yet.
+        </div>
+        `;
+
+    } else {
+
+        notifications.forEach((n) => {
+
+            output += `
+                <div class="card">
+                    <div>
+                        <b>${n.title}</b><br>
+                        ${n.message}
+                    </div>
+                    <div class="time">${n.time}</div>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById("notificationList").innerHTML = output;
+}
+
+loadNotifications();
+</script>
+
+</body>
+</html>

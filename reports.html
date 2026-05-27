@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report History</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .container {
+            width: 900px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #0b3d91;
+        }
+
+        .report-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .reason {
+            color: red;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #0b3d91;
+            color: white;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .delete {
+            background: #d11a2a;
+        }
+
+        .clear {
+            background: #555;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top">
+        <h1>Report History</h1>
+        <button onclick="goBack()">Back</button>
+    </div>
+
+    <div id="reportList"></div>
+
+    <button class="clear" onclick="clearReports()">Clear All Reports</button>
+
+</div>
+
+<script>
+function loadReports() {
+    let reports = JSON.parse(localStorage.getItem("reports")) || [];
+    let output = "";
+
+    if (reports.length === 0) {
+
+        output = `
+            <div style="text-align:center; color:gray; margin-top:40px;">
+                📋<br><br>
+                No reports submitted yet.
+                </div>
+                `;
+            }
+
+    reports.forEach((report, index) => {
+        output += `
+            <div class="report-card">
+                <h3>Report #${index + 1}</h3>
+                <p><b>Item:</b> ${report.item}</p>
+                <p><b>Reason:</b> <span class="reason">${report.reason}</span></p>
+                <p><b>Details:</b> ${report.details}</p>
+                <p><b>Date:</b> ${report.date}</p>
+
+
+            </div>
+        `;
+    });
+
+    document.getElementById("reportList").innerHTML = output;
+}
+
+
+function clearReports() {
+    let confirmClear = confirm("Clear all reports?");
+
+    if (confirmClear) {
+        localStorage.removeItem("reports");
+        loadReports();
+        alert("All reports cleared.");
+    }
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+loadReports();
+</script>
+
+</body>
+</html>

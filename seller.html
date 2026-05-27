@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seller Profile</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f7fb;
+        }
+
+        .profile-card {
+            width: 500px;
+            margin: 70px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h2 {
+            color: #0b3d91;
+        }
+
+        .item-box {
+            background: #eaf2ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #0b3d91;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .back {
+            background: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="profile-card">
+    <img class="avatar" src="images/defaultseller.jpg">
+
+    <h2 id="sellerName">Seller</h2>
+    <p id="sellerRating"></p>
+    <p id="sellerBio"></p>
+    <p>XMUM Campus Seller</p>
+
+    <div class="item-box">
+        <h3>Listed Item</h3>
+        <p id="sellerItem"></p>
+        <p id="sellerPrice"></p>
+    </div>
+
+    <button onclick="messageSeller()">Message Seller</button>
+    <br>
+    <button class="back" onclick="goBack()">Back</button>
+</div>
+
+<script>
+let sellers = {
+    "Zhixuan": {
+        name: "Zhixuan",
+        image: "images/zhixuan.jpg",
+        rating: "4.8",
+        bio: "Computer Science student, selling used laptop."
+    },
+    "Jeremy": {
+        name: "Jeremy",
+        image: "images/jeremy.jpg",
+        rating: "4.8",
+        bio: "Friendly seller."
+    },
+    "Ming Hao": {
+        name: "Ming Hao",
+        image: "images/minghao.jpg",
+        rating: "4.8",
+        bio: "Organized student."
+    },
+    "Chloe": {
+        name: "Chloe",
+        image: "images/chloe.jpg",
+        rating: "4.8",
+        bio: "Music lover."
+    },
+    "Veron":{
+        name:"Veron",
+        image:"images/veron.jpg",
+        rating:"4.8",
+        bio:"FIT student",
+    },
+    "Alisa":{
+        name:"Alisa",
+        image:"images/alisa.jpg",
+        rating:"4.8",
+        bio:"Friendly seller",
+    },
+    "Venessa":{ 
+        name:"Venessa",
+        image:"images/venessa.jpg",
+        rating:"4.8",
+        bio:"studying IT",
+    },
+    "You":{ 
+        name: "You",
+        image: "images/me.jpg",
+        rating: "4.8",
+        bio: ""
+    }
+};
+
+function loadSeller() {
+    let sellerName = localStorage.getItem("sellerName") || "You";
+    let seller = sellers[sellerName] || sellers["You"];
+    let profile = JSON.parse(localStorage.getItem("profile")) || {};
+
+    document.getElementById("sellerName").innerText = seller.name;
+
+    document.getElementById("sellerItem").innerText =
+        localStorage.getItem("sellerItem") || "No item";
+
+    document.getElementById("sellerPrice").innerText =
+        localStorage.getItem("sellerPrice") || "";
+
+    if (seller.name === "You") {
+        document.querySelector(".avatar").src =
+            profile.image || "images/defaultseller.jpg";
+
+        document.getElementById("sellerBio").innerText =
+            profile.bio || "Student seller on campus.";
+    } else {
+        document.querySelector(".avatar").src = seller.image;
+        document.getElementById("sellerBio").innerText = seller.bio;
+    }
+
+    document.getElementById("sellerRating").innerText = "⭐ " + seller.rating;
+}
+
+function messageSeller() {
+
+    localStorage.setItem(
+        "chatItem",
+        localStorage.getItem("sellerItemKey")
+    );
+
+    alert(
+        "⚠️ Safety Reminder:\n\n" +
+        "Please avoid sharing personal or banking information.\n" +
+        "Meet in safe public places on campus."
+    );
+
+    window.location.href = "chat.html";
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+loadSeller();
+</script>
+
+</body>
+</html>

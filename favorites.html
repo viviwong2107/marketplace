@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favorites</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f7fb;
+        }
+
+        .container {
+            width: 900px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #0b3d91;
+        }
+
+        .items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+        }
+
+        .card p {
+            color: #0b3d91;
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 18px;
+            background: #0b3d91;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>My Favorites</h1>
+
+    <div id="favoriteList" class="items"></div>
+
+    <button onclick="goBack()">Back</button>
+</div>
+
+<script>
+let products = {
+    laptop: {
+        name: "Laptop",
+        price: "RM 2500",
+        image: "images/laptop.jpg"
+    },
+    bag: {
+        name: "School Bag",
+        price: "RM 50",
+        image: "images/bag.jpg"
+    },
+    box: {
+        name: "Storage Box",
+        price: "RM 20",
+        image: "images/box.jpg"
+    },
+    headphone: {
+        name: "Headphone",
+        price: "RM 80",
+        image: "images/headphone.jpg"
+    },
+    Maggie:{
+        name:"Maggie",
+        price:"Free",
+        image:"images/maggie.jpg"
+    },
+    Pen:{
+        name:"Pen",
+        price:"Free",
+        image:"images/pen.jpg"
+    },
+    notebook:{
+        name:"Notebook",
+        price:"Free",
+        image:"images/notebook.jpg"
+    }
+}
+
+function loadFavorites() {
+    let saved = JSON.parse(localStorage.getItem("savedItems")) || [];
+    let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+    let output = "";
+
+    if (saved.length === 0) {
+        output = "<p>No saved items yet.</p>";
+    }
+
+    saved.forEach((key) => {
+        let item;
+
+        if (key.startsWith("added_")) {
+            let index = key.split("_")[1];
+            item = addedItems[index];
+        } else {
+            item = products[key];
+        }
+
+        if (item) {
+            let img = item.image ? item.image : "images/default.png"
+
+            output += `
+                <div class="card" onclick="openItem('${key}')">
+                    <img src="${img}" 
+                    onerror="this.onerror=null; this.src='images/default.png';">
+                    <h3>${item.name}</h3>
+                    <p>${item.price}</p>
+                    <small>Click to view item</small>
+                </div>
+            `;
+        }
+    });
+
+    document.getElementById("favoriteList").innerHTML = output;
+}
+
+function openItem(key) {
+    localStorage.setItem("openItem", key);
+    window.location.href = "marketplace.html";
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+loadFavorites();
+</script>
+
+</body>
+</html>

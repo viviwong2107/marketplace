@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Listings</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f7fb;
+        }
+
+        .container {
+            width: 900px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #0b3d91;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .left {
+            display: flex;
+            align-items: center;
+        }
+
+        .left img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+
+        .info {
+            font-size: 15px;
+        }
+
+        .price {
+            color: #0b3d91;
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .available {
+            background: #18a558;
+            color: white;
+        }
+
+        .sold {
+            background: gray;
+            color: white;
+        }
+
+        .actions button {
+            margin-left: 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete {
+            background: red;
+            color: white;
+        }
+
+        .sold-btn {
+            background: #0b3d91;
+            color: white;
+        }
+
+        .back {
+            margin-top: 20px;
+            padding: 10px 15px;
+            border: none;
+            background: #777;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .reserved {
+            background: orange;
+            color: white;      
+        }
+
+        .modal-bg {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.55);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            width: 420px;
+            background: white;
+            border-radius: 20px;
+            text-align: center;
+            padding: 35px 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .shield {
+            font-size: 55px;
+            color: #0b3d91;
+        }
+
+        .modal-box h2 {
+            color: #0b3d91;
+            font-size: 28px;
+            margin: 15px 0;
+        }
+
+        .modal-box p {
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .modal-box button {
+            margin-top: 20px;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            background: #0b3d91;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>My Listings</h1>
+
+    <div id="list"></div>
+
+    <button class="back" onclick="goBack()">Back</button>
+    
+</div>
+
+<div id="soldModal" class="modal-bg">
+    <div class="modal-box">
+        <div class="shield">📦</div>
+        <h2>Confirm Sold</h2>
+        <p>
+            Are you sure you want to mark this item as sold?
+        </p>
+
+        <button onclick="confirmSoldAction()">Yes</button>
+        <button onclick="closeSoldModal()" 
+        style="background: gray; margin-left:10px;">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+function loadItems() {
+    let items = JSON.parse(localStorage.getItem("addedItems")) || [];
+    let output = "";
+
+    items.forEach((item, index) => {
+        let status = item.status || "Available";
+
+        output += `
+        <div class="card">
+            <div class="left">
+                <img src="${item.image}" 
+                onerror="this.onerror=null; this.src='images/default.png';">
+                
+                <div class="info">
+                    <b>${item.name}</b><br>
+                    <span class="price">${item.price}</span><br>
+                    <span class="status ${
+                    status === 'Sold'
+                    ? 'sold'
+                    : status === 'Reserved'
+                    ? 'reserved'
+                    : 'available'
+                    }">
+                    ${status}
+                    </span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button onclick="markReserved(${index})">
+                    ${item.status === "Reserved"
+                    ? "Cancel Reserved"
+                    : "Mark as Reserved"}
+                    </button>
+
+                    <button 
+                    onclick="markSold(${index})"
+                    ${item.status === "Sold" ? "disabled" : ""}>
+
+                    ${item.status === "Sold"
+                    ? "Sold"
+                    : "Mark as Sold"}
+                    </button>
+                    
+                        <button class="delete" onclick="deleteItem(${index})">
+                            Delete
+                            </button>
+
+                            </div>
+             
+               </div>
+         `;
+    });
+
+    document.getElementById("list").innerHTML = output;
+}
+
+function deleteItem(index) {
+    let items = JSON.parse(localStorage.getItem("addedItems")) || [];
+    items.splice(index, 1);
+    localStorage.setItem("addedItems", JSON.stringify(items));
+    loadItems();
+}
+
+function markReserved(index) {
+    let items = JSON.parse(localStorage.getItem("addedItems")) || [];
+
+    if (items[index].status === "Reserved") {
+        items[index].status = "Available";
+    } else {
+        items[index].status = "Reserved";
+    }
+
+    localStorage.setItem("addedItems", JSON.stringify(items));
+
+    loadItems();
+}
+
+let soldIndex = null;
+
+function markSold(index) {
+
+    soldIndex = index;
+
+    document.getElementById("soldModal").style.display = "flex";
+}
+
+function closeSoldModal() {
+
+    document.getElementById("soldModal").style.display = "none";
+}
+
+function confirmSoldAction() {
+
+    let items = JSON.parse(localStorage.getItem("addedItems")) || [];
+
+    items[soldIndex].status = "Sold";
+
+    localStorage.setItem("addedItems", JSON.stringify(items));
+
+    document.getElementById("soldModal").style.display = "none";
+
+    loadItems();
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+loadItems();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Messages</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .chat-container {
+            display: flex;
+            width: 1100px;
+            margin: 50px auto;
+            gap: 20px;
+        }
+
+        .chat-list {
+            width: 300px;
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+        }
+
+        .chat-user {
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            background: #f8f8f8;
+        }
+
+        .chat-user:hover {
+            background: #eaf2ff;
+        }
+
+        .chat-user.active {
+            background: #dbeafe;
+            border-left: 5px solid #0b3d91;
+        }
+
+        .chat-box {
+            flex: 1;
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #0b3d91;
+            margin-top: 0;
+        }
+
+        .item-info {
+            background: #eaf2ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 12px;
+            margin: 12px 0;
+            max-width: 60%;
+        }
+
+        .seller {
+            background: #f0f0f0;
+        }
+
+        .you {
+            background: #0b3d91;
+            color: white;
+            margin-left: auto;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #0b3d91;
+            color: white;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #777;
+            margin-top: 20px;
+        }
+
+        #chatMessages {
+            height: 350px;
+            overflow-y: auto;
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="chat-list">
+        <h2>Messages</h2>
+
+        <div class="chat-user" id="user-laptop" onclick="switchChat('laptop')">
+            💻 <b>Zhixuan</b><br>
+            <small>Laptop</small>
+        </div>
+
+        <div class="chat-user" id="user-bag" onclick="switchChat('bag')">
+            🎒 <b>Jeremy</b><br>
+            <small>School Bag</small>
+        </div>
+
+        <div class="chat-user" id="user-box" onclick="switchChat('box')">
+            📦 <b>Ming Hao</b><br>
+            <small>Storage Box</small>
+        </div>
+
+        <div class="chat-user" id="user-headphone" onclick="switchChat('headphone')">
+            🎧 <b>Chloe</b><br>
+            <small>Headphone</small>
+        </div>
+
+        <div class="chat-user" id="user-Maggie" onclick="switchChat('Maggie')">
+            🍜 <b>Veron</b><br>
+            <small>Maggie</small>
+        </div>
+
+        <div class="chat-user" id="user-Pen" onclick="switchChat('Pen')">
+            🖊️ <b>Alisa</b><br>
+            <small>Pen</small>
+        </div>
+
+        <div class="chat-user" id="user-notebook" onclick="switchChat('notebook')">
+            📓 <b>Venessa</b><br>
+            <small>Notebook</small>
+        </div>
+
+        <div id="addedChatList"></div>
+    </div>
+
+    <div class="chat-box">
+        <h1 id="chatTitle">Messages</h1>
+
+        <div class="item-info" id="itemInfo"></div>
+
+        <div id="chatMessages"></div>
+
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <button class="back" onclick="goBack()">Back</button>
+    </div>
+
+</div>
+
+<script>
+localStorage.setItem("unreadMessage", "no");
+
+let chatInfo = {
+    laptop: {
+        seller: "Zhixuan",
+        item: "Laptop",
+        price: "RM 2500"
+    },
+    bag: {
+        seller: "Jeremy",
+        item: "School Bag",
+        price: "RM 50"
+    },
+    box: {
+        seller: "Ming Hao",
+        item: "Storage Box",
+        price: "RM 20"
+    },
+    headphone: {
+        seller: "Chloe",
+        item: "Headphone",
+        price: "RM 80"
+    },
+    Maggie: {
+        seller: "Veron",
+        item: "Maggie",
+        price: "Free"
+    },
+    Pen: {
+        seller: "Alisa",
+        item: "Pen",
+        price: "Free"
+     },
+    notebook: {
+        seller: "Venessa",
+        item: "Notebook",
+        price: "Free"
+    }
+};
+
+
+let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+
+addedItems.forEach((item, index) => {
+    chatInfo["added_" + index] = {
+        seller: "You",
+        item: item.name || "Uploaded Item",
+        price: item.price || "RM 0"
+    };
+});
+
+let selectedItem = localStorage.getItem("chatItem") || "laptop";
+
+if (selectedItem.startsWith("added_")) {
+    chatInfo[selectedItem] = {
+        seller: localStorage.getItem("chatSeller") || "You",
+        item: localStorage.getItem("chatProductName") || "Uploaded Item",
+        price: localStorage.getItem("chatProductPrice") || "RM 0"
+    };
+}
+
+let chatMessages = [];
+
+function loadChat() {
+    chatMessages = JSON.parse(localStorage.getItem("chat_" + selectedItem)) || [];
+
+    document.getElementById("chatMessages").innerHTML = "";
+
+    let output = "";
+
+    chatMessages.forEach((msg) => {
+        if (msg.type === "seller") {
+            output += `<div class="message seller">${msg.text}</div>`;
+        } else {
+            output += `<div class="message you">${msg.text}</div>`;
+        }
+    });
+
+    document.getElementById("chatMessages").innerHTML = output;
+    let chatBox = document.getElementById("chatMessages");
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function loadChatHeader() {
+    let info = chatInfo[selectedItem];
+
+    if (!info) {
+        selectedItem = "laptop";
+        info = chatInfo.laptop;
+    }
+
+    document.getElementById("chatTitle").innerText = "Chat with " + info.seller;
+
+    document.getElementById("itemInfo").innerHTML = `
+        <b>${info.item}</b><br>
+        ${info.price}<br>
+        Seller: ${info.seller}
+    `;
+
+    document.querySelectorAll(".chat-user").forEach(user => {
+        user.classList.remove("active");
+    });
+
+    let activeUser = document.getElementById("user-" + selectedItem);
+
+    if (activeUser) {
+        activeUser.classList.add("active");
+    }
+}
+
+function sendMessage() {
+    let input = document.getElementById("messageInput");
+    let message = input.value.trim();
+
+    if (message === "") {
+        alert("Please type a message");
+        return;
+    }
+
+    chatMessages.push({
+        type: "you",
+        text: "You: " + message
+    });
+
+    localStorage.setItem("chat_" + selectedItem, JSON.stringify(chatMessages));
+
+    input.value = "";
+    loadChat();
+    loadAddedChatList();
+}
+
+function switchChat(itemKey) {
+    selectedItem = itemKey;
+    localStorage.setItem("chatItem", selectedItem);
+    loadChatHeader();
+    loadChat();
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+function loadAddedChatList() {
+    let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+    let output = "";
+
+    addedItems.forEach((item, index) => {
+        let chatKey = "added_" + index;
+        let messages = JSON.parse(localStorage.getItem("chat_" + chatKey)) || [];
+        let lastMsg = messages.length > 0
+            ? messages[messages.length - 1].text
+            : item.name || "Uploaded Item";
+
+        output += `
+            <div class="chat-user" id="user-${chatKey}" onclick="switchChat('${chatKey}')">
+                🛒 <b>You</b><br>
+                <small>${lastMsg}</small>
+            </div>
+        `;
+    });
+
+    document.getElementById("addedChatList").innerHTML = output;
+}
+
+loadAddedChatList();
+loadChatHeader();
+loadChat();
+</script>
+
+</body>
+</html>

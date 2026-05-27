@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XMUM Marketplace</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .navbar {
+            height: 70px;
+            background: #0b3d91;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+}
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .search {
+            width: 430px;
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: none;
+            font-size: 15px;
+        }
+
+        .top-icons {
+            font-size: 28px;
+            margin-left: 18px;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            width: 200px;
+            height: calc(100vh - 70px);  
+            background: white;
+            position: fixed;
+            top: 70px;
+            left: 0;
+
+            padding: 25px 18px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            padding: 13px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #eaf2ff;
+        }
+
+    .main {
+            margin-left: 240px;
+            padding: 100px 35px 35px 35px;
+            max-width: 1150px;
+        }
+
+        .product-section {
+            display: grid;
+            grid-template-columns: 55% 45%;
+            gap: 35px;
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .main-img {
+            width: 100%;
+            height: 420px;
+            object-fit: contain;
+            border-radius: 15px;
+            background: #f8f8f8;
+        }
+
+        .details h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .price {
+            color: #0b3d91;
+            font-size: 30px;
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        .status {
+            display: inline-block;
+            background: #18a558;
+            color: white;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .seller {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .seller img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .seller button {
+            margin-left: 15px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            background: #0b3d91;
+            color: white;
+            cursor: pointer;
+        }
+
+        .info {
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 13px 18px;
+            border: none;
+            border-radius: 8px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .primary {
+            background: #0b3d91;
+            color: white;
+        }
+
+        .outline {
+            background: white;
+            color: #0b3d91;
+            border: 1px solid #0b3d91;
+        }
+
+        .report {
+            background: #eeeeee;
+            color: #333;
+        }
+
+        .categories {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .category {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .category:hover {
+            background: #eaf2ff;
+            transform: scale(1.03);
+        }
+
+        .similar {
+            margin-top: 30px;
+        }
+
+        .items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f8f8f8;
+        }
+
+        .card h3 {
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            color: #0b3d91;
+            font-weight: bold;
+        }
+
+        .free {
+            color: green;
+            font-weight: bold;
+        }
+
+        .chat-icon {
+           position: relative;
+           font-size: 30px;
+           margin-left: 18px;
+           cursor: pointer;
+        }
+
+        #unreadDot {
+            position: absolute;
+            top: 0;
+            right: -4px;
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            display: none;
+        }
+
+        #profileName {
+            color: white;
+            font-size: 16px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .sold-card {      
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .sold-text {
+            color: red;
+            font-weight: bold;
+        }
+
+        .search-btn {
+            padding: 10px 18px;
+            margin-left: 8px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: #0b3d91;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-bg {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.55);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            width: 420px;
+            background: white;
+            border-radius: 20px;
+            text-align: center;
+            padding: 35px 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .shield {
+            font-size: 55px;
+            color: #0b3d91;
+        }
+
+        .modal-box h2 {
+            color: #0b3d91;
+            font-size: 28px;
+            margin: 15px 0;
+        }
+
+        .modal-box p {
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .modal-box button {
+            margin-top: 20px;
+            padding: 12px 45px;
+            border: none;
+            border-radius: 25px;
+            background: #0b3d91;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div class="logo">XMUM Second-Hand Trading</div>
+
+    <div>
+        <input class="search" id="searchInput" type="text" placeholder="Search items..." onkeydown="handleSearch(event)">
+        <button class="search-btn" onclick="searchItem()">Search</button>
+        <span class="top-icons" onclick="goNotification()">🔔</span>
+        <span class="chat-icon" onclick="goChat(currentItem)">
+            💬
+             <span id="unreadDot"></span>
+        </span>
+        <span class="top-icons" onclick="goProfile()">👤</span>
+        <span id="profileName">Student</span>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="menu-item">🏠 Home</div>
+    <div class="menu-item" onclick="scrollToCategories()">▦ Categories</div>
+    <div class="menu-item" onclick="goFavorites()">♡ Favorites</div>
+    <div class="menu-item" onclick="goListings()">🏷️ My Listings</div>
+    <div class="menu-item" onclick="goAdd()">➕Add Item</div>
+    <div class="menu-item" onclick="goChat(currentItem)">💬 Messages</div>
+    <div class="menu-item" onclick="goReports()">🚩 Reports</div>
+</div>
+
+<div class="main">
+
+    <div class="product-section">
+        <div>
+            <img class="main-img" id="mainImage" src="images/laptop.jpg">
+        </div>
+
+        <div class="details">
+            <h1 id="itemName">Laptop</h1>
+            <div class="price" id="itemPrice">RM 2500</div>
+            <div class="status">Available</div>
+
+            <div class="seller">
+
+                 <img src="images/defaultseller.jpg">
+
+                <div>
+                    <b id="sellerName">Jia Yi</b><br>
+                    ⭐ 4.8 seller rating
+                </div>
+                <button onclick="goSellerProfile()">View Profile</button></div>
+
+            <div class="info" id="itemDescription">
+                <b>Product details:</b><br>
+                Good condition laptop for study use. Suitable for assignment, online class,
+                presentation and basic programming.<br><br>
+                <b>Condition:</b> Good<br>
+                <b>Location:</b> D1
+            </div>
+
+            <div class="btn-group">
+                <button class="btn primary" onclick="goChat(currentItem)">Message Seller</button>
+                <button id="saveBtn" class="btn outline" onclick="toggleSave()">♡ Save Item</button>
+                <button class="btn report" onclick="goReport()">Report</button>
+               
+            </div>
+        </div>
+    </div>
+
+    <div class="categories">
+        <h2>Browse Categories</h2>
+
+        <div class="category-list">
+            <div class="category" onclick="filterCategory('electronics')">💻<br>Electronics</div>
+            <div class="category" onclick="filterCategory('study')">📚<br>Study Items</div>
+            <div class="category" onclick="filterCategory('daily')">🎒<br>Daily Items</div>
+            <div class="category" onclick="filterCategory('others')">📦<br>Others</div>
+            <div class="category" onclick="showAll()">✨<br>All</div>
+            <div class="category" onclick="filterCategory('free')">🎁<br>Free</div>
+        </div>
+    </div>
+    
+    <div class="similar">
+        <h2>Similar Items</h2>
+        
+        <div class="items">
+            <div class="card" data-category="electronics" onclick="changeItem('laptop')">
+                <img src="images/laptop.jpg">
+                <h3>Laptop</h3>
+                <p>RM 2500</p>
+                <small>📍 Hostel Area</small>
+            </div>
+            
+             <div class="card" data-category="daily" onclick="changeItem('bag')">
+                <img src="images/bag.jpg">
+                <h3>School Bag</h3>
+                <p>RM 50</p>
+                <small>📍 D5</small>
+            </div>
+
+            <div class="card" data-category="study" onclick="changeItem('box')">
+                <img src="images/box.jpg">
+                <h3>Storage Box</h3>
+                <p>RM 20</p>
+                <small>📍 LY7</small>
+            </div>
+
+            <div class="card" data-category="electronics" onclick="changeItem('headphone')">
+                <img src="images/headphone.jpg">
+                <h3>Headphone</h3>
+                <p>RM 80</p>
+                <small>📍 LY2</small>
+            </div>
+
+            <div class="card" data-category="free" onclick="changeItem('Maggie')">
+                <img src="images/maggie.jpg">
+                <h3>Maggie</h3>
+                <p class="free">Free</p>
+                <small>📍 D5</small>
+            </div>
+
+            <div class="card" data-category="free" onclick="changeItem('Pen')">
+                <img src="images/pen.jpg">
+                <h3>Pen</h3>
+                <p class="free">Free</p>
+                <small>📍 D5</small>
+            </div>
+
+            <div class="card" data-category="free" onclick="changeItem('notebook')">
+                <img src="images/notebook.jpg">
+                <h3>Notebook</h3>
+                <p class="free">Free</p>
+                <small>📍 D6</small>
+            </div>
+        </div>
+    </div>
+
+<h2>Recently Added</h2>
+<div id="addedItemsList" class="items"></div>
+
+<div id="safetyModal" class="modal-bg">
+    <div class="modal-box">
+        <div class="shield">🛡️</div>
+        <h2>Safety Reminder</h2>
+        <p>
+            Please meet in public campus areas and avoid sharing personal banking details.
+        </p>
+        <button onclick="closeSafetyModal()">OK</button>
+    </div>
+</div>
+
+<script>
+
+    if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+}
+
+window.addEventListener("pageshow", function() {
+    window.scrollTo(0, 0);
+});
+
+let products = {
+    laptop: {
+        name: "Laptop",
+        price: "RM 2500",
+        image: "images/laptop.jpg",
+        seller: "Zhixuan",
+        avatar:"images/zhixuan.jpg",
+        description:`
+            <b>Product details:</b><br>
+            Good condition laptop for study use. Suitable for assignment, online class,
+            presentation and basic programming.<br><br>
+            <b>Condition:</b> Good<br>
+            <b>Location:</b> XMUM Hostel Area
+        `
+    },
+    bag: {
+        name: "School Bag",
+        price: "RM 50",
+        image: "images/bag.jpg",
+        seller: "Jeremy",
+        avatar:"images/jeremy.jpg",
+        description: `
+            <b>Product details:</b><br>
+            A black school bag suitable for daily class use. Clean and still in good condition.<br><br>
+            <b>Condition:</b> Good<br>
+            <b>Location:</b> Hostel Block
+        `
+    },
+    box: {
+        name: "Storage Box",
+        price: "RM 20",
+        image: "images/box.jpg",
+        seller: "Ming Hao",
+        avatar:"images/minghao.jpg",
+        description: `
+            <b>Product details:</b><br>
+            Plastic storage box for stationery, books or small items. Useful for hostel room organization.<br><br>
+            <b>Condition:</b> Like New<br>
+            <b>Location:</b> Library Area
+        `
+    },
+    headphone: {
+        name: "Headphone",
+        price: "RM 80",
+        image: "images/headphone.jpg",
+        seller: "Chloe",
+        avatar:"images/chloe.jpg",
+        description:`
+            <b>Product details:</b><br>
+            Wireless headphone suitable for online class, music and study. Battery still works well.<br><br>
+            <b>Condition:</b> Excellent<br>
+            <b>Location:</b> LY2
+        `
+    
+    },
+    notebook:{
+        name:"Notebook",
+        price:"Free",
+        image:"images/notebook.jpg",
+        seller:"Venessa",
+        avatar:"images/venessa.jpg",
+        description: `
+        <b>Product details:</b><br>
+        Free notebook, still usable.<br><br>
+        <b>Condition:</b> Fair<br>
+        <b>Location:</b> D6
+        `
+
+    },
+    Maggie:{
+        name:"Maggie",
+        price:"Free",
+        image:"images/maggie.jpg",
+        seller:"veron",
+        avatar:"images/veron.jpg",
+        description: `
+        <b>Product details:</b><br>
+        Free maggie,expire on 30/12/2026<br><br>
+        <b>Condition:</b>Excellent<br>
+        <b>Location:</b>D5
+        `
+    },
+    Pen:{
+        name:"Pen",
+        price:"Free",
+        image:"images/pen.jpg",
+        seller:"Alisa",
+        avatar:"images/alisa.jpg",
+        description:`
+        <b>Product details:</b><br>
+        Free pen,100% new<br><br>
+        <b>Condition:</b>Excellent<br>
+        <b>Location:</b>D5
+        `
+    }
+};
+
+let currentItem = "laptop";
+
+function filterCategory(type) {
+    let cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+        if (card.dataset.category === type) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    document.querySelector(".similar").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+function goReport() {
+    localStorage.setItem("reportItem", currentItem);
+    window.location.href = "report.html";
+}
+
+function goReports() {
+    window.location.href = "reports.html";
+}
+
+function searchItem() {
+
+    let search = document.getElementById("searchInput").value
+        .toLowerCase()
+        .trim();
+
+    let cards = document.querySelectorAll(".card");
+    let matchedCards = [];
+
+    if (search === "") {
+
+        cards.forEach(card => {
+            card.style.display = "block";
+        });
+
+        return;
+    }
+
+    cards.forEach(card => {
+
+        let itemName = card.querySelector("h3")
+            .innerText
+            .toLowerCase();
+
+        if (itemName.includes(search)) {
+
+            card.style.display = "block";
+            matchedCards.push(card);
+
+        } else {
+
+            card.style.display = "none";
+        }
+    });
+
+    if (matchedCards.length === 0) {
+
+        alert("No item found");
+
+    } else if (matchedCards.length === 1) {
+
+        matchedCards[0].click();
+
+    } else {
+
+        document.querySelector(".similar").scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+}
+
+function handleSearch(event) {
+    if (event.key === "Enter") {
+        searchItem();
+    }
+}
+
+function goAdd() {
+    window.location.href = "add.html";
+}
+
+function loadAddedItems() {
+    let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+    let list = document.getElementById("addedItemsList");
+
+    let output = "";
+
+    addedItems.forEach((item, index) => {
+
+        let img = item.image ? item.image : "images/default.png";
+        let name = item.name ? item.name : "Unnamed Item";
+        let price = item.price ? item.price : "RM 0";
+        let location = item.location ? item.location : "No location";
+
+        output += `
+            <div class="card ${item.status === 'Sold' ? 'sold-card' : ''}"
+            data-category="${item.category}"
+            onclick="openAddedItem(${index})">
+
+                <img src="${img}"  onerror="this.onerror=null; this.src='images/default.png';"
+                <h3>${name}</h3>
+                <p>${price}</p>
+               
+                <p class="sold-text">
+                    ${item.status === "Sold"
+                    ? "🔴 Sold"
+                    : item.status === "Reserved"
+                    ? "🟠 Reserved"
+                    : ""}
+                    </p>
+
+                <small>📍 ${location}</small>
+
+            </div>
+        `;
+    });
+
+    list.innerHTML = output;
+}
+
+loadAddedItems();
+
+function openAddedItem(index) {
+    let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+    let item = addedItems[index];
+
+    currentItem = "added_" + index;
+    localStorage.setItem("lastViewedItem", currentItem);
+
+    let img = item.image ? item.image : "images/default.jpg";
+    document.getElementById("mainImage").src = img;
+    document.getElementById("mainImage").onerror = function() {
+        this.onerror = null;
+        this.src = "images/default.png";
+    };
+
+    document.getElementById("itemName").innerText = item.name || "Unnamed Item";
+    document.getElementById("itemPrice").innerText = item.price || "RM 0";
+    document.getElementById("sellerName").innerText = "You";
+
+   let profile = JSON.parse(localStorage.getItem("profile")) || {};
+
+   document.querySelector(".seller img").src =
+    profile.image || "images/defaultseller.jpg"
+
+    document.getElementById("itemDescription").innerHTML = `
+        <b>Product details:</b><br>
+        ${item.description || "No description"}<br><br>
+        <b>Condition:</b> Not specified<br>
+        <b>Location:</b> ${item.location || "No location"}
+    `;
+
+     let statusText = item.status || "Available";
+    
+     document.querySelector(".status").innerText = statusText;
+    
+     if (statusText === "Sold") {
+        document.querySelector(".status").style.background = "red";
+    } else if (statusText === "Reserved") {
+        document.querySelector(".status").style.background = "orange";
+    } else {
+        document.querySelector(".status").style.background = "#18a558";
+    }
+
+    checkSaved();
+
+    document.querySelector(".product-section").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+function goNotification() {
+    window.location.href = "notification.html";
+}
+
+function goListings() {
+    window.location.href = "mylistings.html";
+}
+
+let pendingChatItem = "";
+
+function goChat(itemKey) {
+    pendingChatItem = itemKey;
+
+    document.getElementById("safetyModal").style.display = "flex";
+}
+
+function closeSafetyModal() {
+    document.getElementById("safetyModal").style.display = "none";
+
+    localStorage.setItem("chatItem", pendingChatItem);
+
+    if (pendingChatItem.startsWith("added_")) {
+        let index = pendingChatItem.split("_")[1];
+        let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+        let item = addedItems[index];
+
+        localStorage.setItem("chatSeller", "You");
+        localStorage.setItem("chatProductName", item.name || "Uploaded Item");
+        localStorage.setItem("chatProductPrice", item.price || "RM 0");
+    }
+
+    window.location.href = "chat.html";
+}
+
+function checkUnread() {
+    let unread = localStorage.getItem("unreadMessage");
+
+    if (unread === "yes") {
+        document.getElementById("unreadDot").style.display = "block";
+    }
+}
+
+checkUnread();
+
+function goProfile() {
+    window.location.href = "profile.html";
+}
+
+function loadProfileName() {
+    let profile = JSON.parse(localStorage.getItem("profile")) || {};
+    document.getElementById("profileName").innerText = profile.name || "Student";
+}
+
+loadProfileName();
+
+function toggleSave() {
+    let saved = JSON.parse(localStorage.getItem("savedItems")) || [];
+
+    let current = currentItem;
+
+    if (saved.includes(current)) {
+        saved = saved.filter(item => item !== current);
+        document.getElementById("saveBtn").innerText = "♡ Save Item";
+    } else {
+        saved.push(current);
+        document.getElementById("saveBtn").innerText = "❤️ Saved";
+    }
+
+    localStorage.setItem("savedItems", JSON.stringify(saved));
+}
+
+function checkSaved() {
+    let saved = JSON.parse(localStorage.getItem("savedItems")) || [];
+
+    if (saved.includes(currentItem)) {
+        document.getElementById("saveBtn").innerText = "❤️ Saved";
+    } else {
+        document.getElementById("saveBtn").innerText = "♡ Save Item";
+    }
+}
+
+checkSaved();
+
+function changeItem(itemKey) {
+    currentItem = itemKey;
+    localStorage.setItem("lastViewedItem", itemKey);
+    let item = products[itemKey];
+
+    document.getElementById("mainImage").src = item.image;
+    document.getElementById("itemName").innerText = item.name;
+    document.getElementById("itemPrice").innerText = item.price;
+    document.getElementById("sellerName").innerText = item.seller;
+
+    document.querySelector(".seller img").src = item.avatar;
+
+    document.getElementById("itemDescription").innerHTML = item.description;
+
+    checkSaved();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+let lastViewed = localStorage.getItem("lastViewedItem");
+
+if (lastViewed) {
+
+    if (lastViewed.startsWith("added_")) {
+
+        let index = lastViewed.split("_")[1];
+        openAddedItem(index);
+
+    } else {
+
+        changeItem(lastViewed);
+    }
+
+} else {
+
+    changeItem("laptop");
+}
+
+function goFavorites() {
+    window.location.href = "favorites.html";
+}
+
+let itemToOpen = localStorage.getItem("openItem");
+
+if (itemToOpen) {
+    if (itemToOpen.startsWith("added_")) {
+        let index = itemToOpen.split("_")[1];
+        openAddedItem(index);
+    } else {
+        changeItem(itemToOpen);
+    }
+
+    localStorage.removeItem("openItem");
+}
+
+function scrollToCategories() {
+    document.querySelector(".categories").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+function showAll() {
+    let cards = document.querySelectorAll(".card");
+    cards.forEach(card => {
+        card.style.display = "block";
+    });
+}
+
+function goSellerProfile() {
+
+    let sellerName =
+        document.getElementById("sellerName").innerText;
+
+    localStorage.setItem("sellerName", sellerName);
+
+    localStorage.setItem(
+        "sellerItem",
+        document.getElementById("itemName").innerText
+    );
+
+    localStorage.setItem(
+        "sellerPrice",
+        document.getElementById("itemPrice").innerText
+    );
+
+    localStorage.setItem("sellerItemKey", currentItem);
+
+    window.location.href = "seller.html";
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Item</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .container {
+            width: 500px;
+            background: white;
+            margin: 60px auto;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #0b3d91;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background: #0b3d91;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .back {
+            background: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Add New Item</h1>
+
+    <label>Item Name</label>
+    <input type="text" id="name" placeholder="Example: Calculator">
+
+    <label>Price</label>
+    <input type="number" id="price" placeholder="Example: 30">
+
+    <label>Description</label>
+    <textarea id="description" rows="4" placeholder="Describe your item"></textarea>
+
+    <label>Location</label>
+    <input type="text" id="location" placeholder="Example: Block C">
+
+    <label>Category</label>
+<select id="category">
+    <option value="electronics">Electronics</option>
+    <option value="study">Study Items</option>
+    <option value="daily">Daily Items</option>
+    <option value="others">Others</option>
+</select>
+
+<label>Upload Image</label>
+ <input type="file" id="imageFile" accept="image/*" onchange="previewImage()">
+ <img id="preview" src="images/default.png" style="width:150px; margin-top:15px; border-radius:10px;">
+   
+ <button onclick="saveItem()">Save Item</button>
+    <button class="back" onclick="goBack()">Back to Marketplace</button>
+</div>
+
+<script>
+let uploadedImage = "";
+function previewImage() {
+    let file = document.getElementById("imageFile").files[0];
+
+    if (!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function(e) {
+        uploadedImage = e.target.result;
+        document.getElementById("preview").src = uploadedImage;
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function saveItem() {
+    let name = document.getElementById("name").value;
+    let price = document.getElementById("price").value;
+    let description = document.getElementById("description").value;
+    let location = document.getElementById("location").value;
+   let category = document.getElementById("category").value;
+   
+   if (price == 0) {
+    category = "free";
+}
+   
+let finalPrice = price == 0 ? "Free" : "RM " + price;
+
+if (price < 0) {
+    alert("Price cannot be negative");
+    return;
+}
+
+    if (name === "" || price === "" || description === "" || location === "") {
+    alert("Please fill in all fields");
+    return;
+}
+
+    let newItem = {
+    name: name,
+    price: finalPrice,
+    description: description,
+    location: location,
+    image: uploadedImage || "images/default.png",
+    category: category,
+    status: "Available"
+};
+
+    let addedItems = JSON.parse(localStorage.getItem("addedItems")) || [];
+    addedItems.push(newItem);
+
+    localStorage.setItem("addedItems", JSON.stringify(addedItems));
+
+    let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+
+    notifications.unshift({
+        title: "Item uploaded successfully",
+        message: "You uploaded: " + name,
+        time: new Date().toLocaleString()
+    });
+
+localStorage.setItem("notifications", JSON.stringify(notifications));
+
+    alert("Item added successfully!");
+    window.location.href = "marketplace.html";
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+</script>
+
+</body>
+</html>

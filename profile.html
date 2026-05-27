@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f7fb;
+        }
+
+        .profile-box {
+            width: 500px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        #profilePreview {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #0b3d91;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .back {
+            background: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="profile-box">
+    <h2>My Profile</h2>
+
+    <img id="profileImage" src="images/defaultseller.jpg">
+
+    <br>
+
+    <label>Upload Profile Photo</label>
+    <input type="file" id="profileFile" accept="image/*" onchange="previewProfileImage()">
+
+    <input type="text" id="name" placeholder="Your name">
+    <input type="text" id="email" placeholder="Your email">
+    <input type="text" id="bio" placeholder="Short bio">
+
+    <button onclick="removePhoto()">Remove Photo</button>
+    <button onclick="saveProfile()">Save</button>
+    <br>
+    <button class="back" onclick="goBack()">Back</button>
+</div>
+
+<script>
+let profileImage = "";
+
+function previewProfileImage() {
+    let file = document.getElementById("profileFile").files[0];
+
+    if (!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function(e) {
+        profileImage = e.target.result;
+        document.getElementById("profileImage").src = profileImage;
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function loadProfile() {
+    let profile = JSON.parse(localStorage.getItem("profile")) || {};
+
+    document.getElementById("name").value = profile.name || "";
+    document.getElementById("email").value = profile.email || "";
+    document.getElementById("bio").value = profile.bio || "";
+
+    profileImage = profile.image || "";
+
+    document.getElementById("profileImage").src =
+    profile.image || "images/defaultseller.jpg";
+}
+
+function saveProfile() {
+
+    let profile = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        bio: document.getElementById("bio").value,
+
+        image: profileImage || ""
+    };
+
+    localStorage.setItem("profile", JSON.stringify(profile));
+
+    alert("Profile saved!");
+
+    window.location.href = "marketplace.html";
+}
+
+function removePhoto() {
+    let profile = JSON.parse(localStorage.getItem("profile")) || {};
+
+    profile.image = "";
+    profileImage = "";   // 关键：清掉旧头像变量
+
+    localStorage.setItem("profile", JSON.stringify(profile));
+
+    document.getElementById("profileImage").src =
+        "images/defaultseller.jpg";
+
+    alert("Profile photo removed.");
+}
+
+function goBack() {
+    window.location.href = "marketplace.html";
+}
+
+loadProfile();
+
+</script>
+
+</body>
+</html>
